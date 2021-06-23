@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!--  <script src="echarts.min.js"></script>-->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <el-container>
+      <el-header>
+        <h2 class="el-icon-document-copy">自动化测试报告</h2>
+      </el-header>
+      <el-container>
+        <el-aside width="600px" style="margin-top: 20px">
+          <el-card shadow="hover" style=";margin-bottom: 20px">
+            <div id="main" style="width: 500px;height:400px"></div>
+          </el-card>
+          <el-card shadow="hover">
+            <div id="main2" style="width: 500px;height:400px;"></div>
+          </el-card>
+        </el-aside>
+        <el-main>
+           <el-row>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">本次执行情况</span>
+                   <el-tag type="primary" label="执行结果" effect="dark" style="float: right" size="small">执行</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: dodgerblue">本次共执行用例 100 条</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">成功率 98% </span>
+                </el-card>
+             </el-col>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">异常情况</span>
+                   <el-tag type="danger" label="执行结果" effect="dark" style="float: right" size="small">异常</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: indianred">本次共有失败用例 30 条</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">失败率 2% </span>
+                </el-card>
+             </el-col>
+             <el-col :span="7">
+                <el-card shadow="hover">
+                  <span style="font-size: small ">持续执行</span>
+                   <el-tag type="warning" label="执行结果" effect="dark" style="float: right" size="small">持续</el-tag>
+                  <el-divider></el-divider>
+                  <span style="font-size: large; color: orangered">本次持续运行 30s</span>
+                  <el-divider></el-divider>
+                  <span style="font-size: small ">平均接口调用时间 500 ms</span>
+                </el-card>
+             </el-col>
+           </el-row>
+           <el-card shadow="hover" style="margin-top: 20px">
+             <h3>接口调用记录</h3>
+              <el-table
+                :data="tableData"
+                stripe
+                style="width: 100%"
+                height="600">
+                <el-table-column
+                  label="Order"
+                  type="index"
+                  width="80"
+                >
+                </el-table-column>
+                <el-table-column
+                  prop="title"
+                  label="Title"
+                  width="250">
+                </el-table-column>
+                <el-table-column
+                  prop="url"
+                  label="Api"
+                  width="250">
+                </el-table-column>
+                <el-table-column
+                  prop="method"
+                  label="Method"
+                >
+                  <template slot-scope="scope">
+                    <el-tag effect="dark" type="success" v-if="scope.row.method=='get'">{{scope.row.method}}</el-tag>
+                    <el-tag effect="dark"  v-if="scope.row.method=='post'">{{scope.row.method}}</el-tag>
+                    <el-tag effect="dark" type="warning" v-if="scope.row.method=='put'">{{scope.row.method}}</el-tag>
+                    <el-tag effect="dark" type="danger" v-if="scope.row.method=='delete'">{{scope.row.method}}</el-tag>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="result"
+                  label="Result"
+                >
+                  <template slot-scope="scope">
+                    <i class="el-icon-circle-check" style="color: green;font-size: large" v-if="scope.row.result==1"></i>
+                    <i class="el-icon-circle-close" style="color: red;font-size: large" v-if="scope.row.result==0"></i>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  label="Action"
+                >
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      @click="handleEdit(scope.$index, scope.row)"
+                      style="color: rebeccapurple"
+                    >Logs</el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+           </el-card>
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          visible: false,
+          tableData: [
+            {
+              title: '登入提莫',
+              url: '/apis/login',
+              method: 'post',
+              result: 1
+            },
+            {
+              title: '创建任务',
+              url: '/apis/task',
+              method: 'post',
+              result: 1
+            },
+            {
+              title: '查询任务',
+              url: '/apis/task',
+              method: 'get',
+              result: 1
+            },
+            {
+              title: '更新任务',
+              url: '/apis/task',
+              method: 'put',
+              result: 1
+            },
+            {
+              title: '删除任务',
+              url: '/apis/task',
+              method: 'delete',
+              result: 0
+            }
+          ]
+        }
+      }
+    })
+  </script>
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: 'ECharts 入门示例'
+        },
+        tooltip: {},
+        legend: {
+            data:['销量']
+        },
+        xAxis: {
+            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+        },
+        yAxis: {},
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+  <script type="text/javascript">
+    var chartDom = document.getElementById('main2');
+    var myChart = echarts.init(chartDom);
+    var option;
+
+option = {
+    title: {
+        text: '南丁格尔玫瑰图',
+        subtext: '纯属虚构',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+    },
+    legend: {
+        left: 'center',
+        top: 'bottom',
+        data: ['rose1', 'rose2', 'rose3', 'rose4', 'rose5', 'rose6', 'rose7', 'rose8']
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            mark: {show: true},
+            dataView: {show: true, readOnly: false},
+            restore: {show: true},
+            saveAsImage: {show: true}
+        }
+    },
+    series: [
+        {
+            name: '半径模式',
+            type: 'pie',
+            radius: [20, 140],
+            center: ['25%', '50%'],
+            roseType: 'radius',
+            itemStyle: {
+                borderRadius: 5
+            },
+            label: {
+                show: false
+            },
+            emphasis: {
+                label: {
+                    show: true
+                }
+            },
+            data: [
+                {value: 40, name: 'rose 1'},
+                {value: 33, name: 'rose 2'},
+                {value: 28, name: 'rose 3'},
+                {value: 22, name: 'rose 4'},
+                {value: 20, name: 'rose 5'},
+                {value: 15, name: 'rose 6'},
+                {value: 12, name: 'rose 7'},
+                {value: 10, name: 'rose 8'}
+            ]
+        },
+        {
+            name: '面积模式',
+            type: 'pie',
+            radius: [20, 140],
+            center: ['75%', '50%'],
+            roseType: 'area',
+            itemStyle: {
+                borderRadius: 5
+            },
+            data: [
+                {value: 30, name: 'rose 1'},
+                {value: 28, name: 'rose 2'},
+                {value: 26, name: 'rose 3'},
+                {value: 24, name: 'rose 4'},
+                {value: 22, name: 'rose 5'},
+                {value: 20, name: 'rose 6'},
+                {value: 18, name: 'rose 7'},
+                {value: 16, name: 'rose 8'}
+            ]
+        }
+    ]
+};
+
+option && myChart.setOption(option);
+</script>
+<style>
+  .el-header, .el-footer {
+    background-color: darkslateblue;
+    text-align: center;
+    color: white;
+    /*line-height: 60px;*/
+  }
+
+  .el-col {
+    margin-right: 10px;
+  }
+
+  .el-card{
+    border-radius: 15px;
+  }
+
+  /*.el-aside {*/
+  /*  background-color: #D3DCE6;*/
+  /*  color: #333;*/
+  /*  text-align: center;*/
+  /*  line-height: 400px;*/
+  /*}*/
+</style>
+</html>

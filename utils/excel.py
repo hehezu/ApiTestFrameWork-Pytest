@@ -1,4 +1,5 @@
 import openpyxl
+import json
 
 
 def load_excel(path):
@@ -19,12 +20,13 @@ def get_sheet_data(wb: openpyxl.workbook.Workbook, index=0, name=None):
     :return:
     """
     st = wb[name] if name else wb.worksheets[index]
+    sheet_header = [cell.value for cell in list(st.rows)[0]]
     sheet_data = []
     for row in list(st.rows)[1:]:
         row_data = []
         for cell in row:
             row_data.append(cell.value)
-        sheet_data.append(row_data)
+        sheet_data.append(dict(zip(sheet_header, row_data)))
     return sheet_data
 
 

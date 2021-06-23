@@ -1,18 +1,8 @@
 import pytest
+from utils.excel import *
+import os
 
-test_data = [{"test_input": "3+5",
-              "expected": 8,
-              "id": "验证3+5=8"
-              },
-             {"test_input": "2+4",
-              "expected": 6,
-              "id": "验证2+4=6"
-              },
-             {"test_input": "6 * 9",
-              "expected": 42,
-              "id": "验证6*9=42"
-              }
-             ]
+base_dir = os.path.dirname(__file__)
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -32,8 +22,16 @@ def pytest_collection_modifyitems(items):
 
 
 def pytest_generate_tests(metafunc):
+    """
+    参数化测试用例
+    :param metafunc:
+    :return:
+    """
     ids = []
     if "parameters" in metafunc.fixturenames:
+        path = os.path.join(base_dir, 'data/test.xlsx')  # 路径拼接
+        wb = load_excel(path)
+        test_data = get_sheet_data(wb, name='Sheet1')
         for data in test_data:  # 用test_data中的id作为测试用例名称
-            ids.append(data['id'])
+            ids.append(data['title'])
         metafunc.parametrize("parameters", test_data, ids=ids, scope="function")  # 用test_data这个列表对parameters进行参数化
