@@ -29,9 +29,9 @@
                   <span style="font-size: small ">本次执行情况</span>
                    <el-tag type="primary" label="执行结果" effect="dark" style="float: right" size="small">执行</el-tag>
                   <el-divider></el-divider>
-                  <span style="font-size: large; color: dodgerblue">本次共执行用例 100 条</span>
+                  <span style="font-size: large; color: dodgerblue">本次共执行用例 {{summary.total}} 条</span>
                   <el-divider></el-divider>
-                  <span style="font-size: small ">成功率 98% </span>
+                  <span style="font-size: small ">成功率 {{summary.success_rate * 100}}% </span>
                 </el-card>
              </el-col>
              <el-col :span="7">
@@ -39,9 +39,9 @@
                   <span style="font-size: small ">异常情况</span>
                    <el-tag type="danger" label="执行结果" effect="dark" style="float: right" size="small">异常</el-tag>
                   <el-divider></el-divider>
-                  <span style="font-size: large; color: indianred">本次共有失败用例 30 条</span>
+                  <span style="font-size: large; color: indianred">本次共有失败用例 {{summary.failed}} 条</span>
                   <el-divider></el-divider>
-                  <span style="font-size: small ">失败率 2% </span>
+                  <span style="font-size: small ">失败率 {{summary.fail_rate * 100}}% </span>
                 </el-card>
              </el-col>
              <el-col :span="7">
@@ -49,9 +49,9 @@
                   <span style="font-size: small ">持续执行</span>
                    <el-tag type="warning" label="执行结果" effect="dark" style="float: right" size="small">持续</el-tag>
                   <el-divider></el-divider>
-                  <span style="font-size: large; color: orangered">本次持续运行 30s</span>
+                  <span style="font-size: large; color: orangered">本次持续运行 {{summary.duration.toFixed(2)}}s</span>
                   <el-divider></el-divider>
-                  <span style="font-size: small ">平均接口调用时间 500 ms</span>
+                  <span style="font-size: small ">平均接口调用时间 {{(summary.avg_duration * 1000).toFixed(2)}} ms</span>
                 </el-card>
              </el-col>
            </el-row>
@@ -104,13 +104,23 @@
                   <template slot-scope="scope">
                     <el-button
                       size="mini"
-                      @click="handleEdit(scope.$index, scope.row)"
                       style="color: rebeccapurple"
+                      @click="viewLogs(scope.row.logs)"
                     >Logs</el-button>
                   </template>
                 </el-table-column>
               </el-table>
            </el-card>
+          <el-dialog
+            title="日志"
+            :visible.sync="dialogVisible"
+            width="50%"
+            :before-close="handleClose">
+            <span style="white-space: pre-wrap;">{{logs}}</span>
+            <span slot="footer" class="dialog-footer">
+              <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+          </el-dialog>
         </el-main>
       </el-container>
     </el-container>
@@ -126,38 +136,16 @@
       data: function() {
         return {
           visible: false,
-          tableData: [
-            {
-              title: '登入提莫',
-              url: '/apis/login',
-              method: 'post',
-              result: 1
-            },
-            {
-              title: '创建任务',
-              url: '/apis/task',
-              method: 'post',
-              result: 1
-            },
-            {
-              title: '查询任务',
-              url: '/apis/task',
-              method: 'get',
-              result: 1
-            },
-            {
-              title: '更新任务',
-              url: '/apis/task',
-              method: 'put',
-              result: 1
-            },
-            {
-              title: '删除任务',
-              url: '/apis/task',
-              method: 'delete',
-              result: 0
-            }
-          ]
+          dialogVisible: false,
+          tableData: ${cases},
+          logs:'',
+          summary: ${summary}
+        }
+      },
+      methods:{
+        viewLogs(logs){
+          this.logs = logs;
+          this.dialogVisible = true;
         }
       }
     })
@@ -196,76 +184,30 @@
 
 option = {
     title: {
-        text: '南丁格尔玫瑰图',
-        subtext: '纯属虚构',
+        text: '用例执行情况',
+        subtext: '本次执行成功失败比例',
         left: 'center'
     },
     tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
+        trigger: 'item'
     },
     legend: {
-        left: 'center',
-        top: 'bottom',
-        data: ['rose1', 'rose2', 'rose3', 'rose4', 'rose5', 'rose6', 'rose7', 'rose8']
-    },
-    toolbox: {
-        show: true,
-        feature: {
-            mark: {show: true},
-            dataView: {show: true, readOnly: false},
-            restore: {show: true},
-            saveAsImage: {show: true}
-        }
+        orient: 'vertical',
+        left: 'left',
     },
     series: [
         {
-            name: '半径模式',
+            name: '访问来源',
             type: 'pie',
-            radius: [20, 140],
-            center: ['25%', '50%'],
-            roseType: 'radius',
-            itemStyle: {
-                borderRadius: 5
-            },
-            label: {
-                show: false
-            },
+            radius: '50%',
+            data: ${series_data},
             emphasis: {
-                label: {
-                    show: true
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-            },
-            data: [
-                {value: 40, name: 'rose 1'},
-                {value: 33, name: 'rose 2'},
-                {value: 28, name: 'rose 3'},
-                {value: 22, name: 'rose 4'},
-                {value: 20, name: 'rose 5'},
-                {value: 15, name: 'rose 6'},
-                {value: 12, name: 'rose 7'},
-                {value: 10, name: 'rose 8'}
-            ]
-        },
-        {
-            name: '面积模式',
-            type: 'pie',
-            radius: [20, 140],
-            center: ['75%', '50%'],
-            roseType: 'area',
-            itemStyle: {
-                borderRadius: 5
-            },
-            data: [
-                {value: 30, name: 'rose 1'},
-                {value: 28, name: 'rose 2'},
-                {value: 26, name: 'rose 3'},
-                {value: 24, name: 'rose 4'},
-                {value: 22, name: 'rose 5'},
-                {value: 20, name: 'rose 6'},
-                {value: 18, name: 'rose 7'},
-                {value: 16, name: 'rose 8'}
-            ]
+            }
         }
     ]
 };
