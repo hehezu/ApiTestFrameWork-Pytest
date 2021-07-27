@@ -32,7 +32,7 @@ class RequestUtil(requests.Session):
             logger.info(f"{k}：{v}")
         logger.info("开始发送请求...")
         before_time = time.time()
-        response = self.request(method, url, **kwargs)
+        response = self.request(method, url, verify=False, **kwargs)
         after_time = time.time()
         if response.status_code == 200:
             logger.info(f"接口请求完毕，响应：{response.text}, 时间: {after_time - before_time} s")
@@ -46,7 +46,7 @@ class RequestUtil(requests.Session):
             self.retry_num += 1
             self.send_request(method, url, title, jsonpath_exp_save=jsonpath_exp_save,
                               regular_exp_save=regular_exp_save,jsonpath_exp_assertion=jsonpath_exp_assertion,
-                              regular_exp_assertion=regular_exp_assertion, verify=False, **kwargs)
+                              regular_exp_assertion=regular_exp_assertion, **kwargs)
         """
             处理关联参数，支持正则提取和JSONPATH提取
         """
