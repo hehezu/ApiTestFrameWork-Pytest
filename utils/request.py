@@ -82,7 +82,7 @@ class RequestUtil(requests.Session):
 
     def replace_template_str(self, target):
         # 正则匹配所有{{key}}，并做处理
-        EXPR = "\{\{(.*?)\}\}"
+        EXPR = r"\{\{(.*?)\}\}"
         keys = re.findall(EXPR, str(target))
         if keys:
             logger.info(f"变量池中匹配到需替换的参数: {keys}")
