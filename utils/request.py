@@ -46,7 +46,7 @@ class RequestUtil(requests.Session):
             self.retry_num += 1
             self.send_request(method, url, title, jsonpath_exp_save=jsonpath_exp_save,
                               regular_exp_save=regular_exp_save,jsonpath_exp_assertion=jsonpath_exp_assertion,
-                              regular_exp_assertion=regular_exp_assertion, **kwargs)
+                              regular_exp_assertion=regular_exp_assertion, verify=False, **kwargs)
         """
             处理关联参数，支持正则提取和JSONPATH提取
         """
