@@ -29,7 +29,6 @@ class RequestUtil(requests.Session):
                 kwargs[k] = json.loads(v)
             except:
                 pass
-            logger.info(f"{k}：{v}")
         logger.info("开始发送请求...")
         before_time = time.time()
         response = self.request(method, url, verify=False, **kwargs)
