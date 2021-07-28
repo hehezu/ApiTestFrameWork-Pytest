@@ -35,7 +35,6 @@ class RequestUtil(requests.Session):  # 可以自动缓存Cookie
                     kwargs[k] = json.loads(self.replace_template_str(v))
                 except:
                     logger.error(f"参数({k})格式不正确")
-        print(kwargs)
         response = self.request(method, url, **kwargs)  # 调用接口
         response_str = response.text
         try:
