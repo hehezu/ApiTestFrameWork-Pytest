@@ -42,7 +42,7 @@ class RequestUtil(requests.Session):  # 可以自动缓存Cookie
             response_str = json.dumps(response_str, indent=4, ensure_ascii=False)
         except:
             logger.warning("响应JSON转换失败！保持原来格式！")
-        logger.info(f"response text: \n {response_str}")
+        # logger.info(f"\n==============request转json后响应内容：\n{response_str}")
         # 判断是否需要关联参数, 如果有，判断是正则提取还是jsonpath提取，做对应处理，处理多参数情况存储
         if jsonpath_exp_save or regular_exp_save:
             if jsonpath_exp_save:
@@ -129,7 +129,7 @@ class RequestUtil(requests.Session):  # 可以自动缓存Cookie
         match_value = jsonpath.jsonpath(target, jsonpath_expression) if jsonpath_expression else re.findall(
             regular_expression)
         if match_value is False or match_value == []:
-            logger.error(f"Failed to extract variable （key: {key}）")
+            logger.error(f"Failed to extract variable （key: {match_value}）")
             return
         match_value = match_value[0] if match_value else match_value  # 匹配到实际的值
         try:

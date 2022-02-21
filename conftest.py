@@ -34,8 +34,8 @@ def pytest_generate_tests(metafunc):
         test_data = get_sheet_data(wb, name='Sheet1')
         for data in test_data:  # 用test_data中的id作为测试用例名称
             ids.append(data['title'])
-        global cases
-        cases = copy.deepcopy(test_data)
+        # global cases
+        # cases = copy.deepcopy(test_data)
         metafunc.parametrize("parameters", test_data, ids=ids, scope="function")  # 用test_data这个列表对parameters进行参数化
 
 
