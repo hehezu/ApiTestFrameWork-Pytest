@@ -9,7 +9,7 @@
 import pyautogui
 import time
 import pyperclip
-from date import countdown
+from cases.date import countdown
 
 
 def openWechat():
