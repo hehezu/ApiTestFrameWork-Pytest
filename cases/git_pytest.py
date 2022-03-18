@@ -23,7 +23,7 @@ def test_apiss2():
     headers = {"Content-Type": "application/json;charset=UTF-8"}
     data = {
         "mobile": "18276424347",
-        "code": "220119",
+        "code": "220318",
         "jsCode": "013DASkl2Khzu84odnol2ayvSi4DASki",
         "source": "0",
         "userType": "2"
